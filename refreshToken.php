@@ -1,14 +1,14 @@
 <?php
 
 //Replace the line with require "vendor/autoload.php" if you are using the Samples from outside of _Samples folder
-function refreshToken($realmId) {
-
 	require(__DIR__ . "/vendor/autoload.php");
-
 	use QuickBooksOnline\API\Core\ServiceContext;
 	use QuickBooksOnline\API\DataService\DataService;
 	use QuickBooksOnline\API\PlatformService\PlatformService;
 	use QuickBooksOnline\API\Core\Http\Serialization\XmlObjectSerializer;
+function refreshToken($realmId) {
+
+
 
 	$con = mysqli_connect('localhost', 'root', 'root', 'acenda_qb');
 
@@ -43,7 +43,10 @@ function refreshToken($realmId) {
 	$access_token  = $accessToken->getAccessToken();
 	$refresh_token = $accessToken->getRefreshToken();
 
-	print_r($accessToken);
+	$query = "UPDATE users SET access_token='" . $access_token . "', refresh_token='" . $refresh_token . "' WHERE id=" . $cid;
+	$result = mysqli_query($con, $query);
+
+	mysqli_close($con);
 	
 	$error = $OAuth2LoginHelper->getLastError();
 	if ($error) {
@@ -54,6 +57,11 @@ function refreshToken($realmId) {
 	}
 	$dataService->updateOAuth2Token($accessToken);
 
+	$tokenData = array(
+		'access_token' => $access_token, 
+		'refresh_token' => $refresh_token
+	);	
+	return $tokenData;
 }
 
 ?>
