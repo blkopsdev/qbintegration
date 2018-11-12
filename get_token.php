@@ -1,7 +1,7 @@
 <?php
 
     require ('vendor/autoload.php');
-    require(__DIR__ . '/Error.php');
+    // require(__DIR__ . '/Error.php');
     use QuickBooksOnline\API\DataService\DataService;
 
     $con=mysqli_connect('localhost','root','root','acenda_qb');
@@ -12,15 +12,13 @@
     }
     
     $headers = apache_request_headers();
-    foreach ($headers as $key => $value) {
-        echo $key . ": " . $value . "<br>";
-    }
+    
     $referer = $headers['referer'];
     $needle = "adneca.com/quickbooks/connect.php";
     if($referer &&  strpos( $referer, $needle ) !== false) {
         $access_data = processCode();
     } else {
-
+        include('./Error.php');
     }
 
     function processCode() 
@@ -79,7 +77,6 @@
             'realmId' => $qsArray['realmId']
         );
     }
-
 
 
     if ($access_data) {
