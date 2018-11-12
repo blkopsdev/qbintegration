@@ -1,0 +1,12 @@
+{
+  "name": "QB/Acenda Integration App",
+  "description": "",
+  "type": "library",
+  "keywords": ["api", "http", "rest", "quickbooks", "smallbusiness"],
+  "homepage": "http://developer.intuit.com",
+  "require": {
+    "quickbooks/v3-php-sdk": ">=5.0.0",
+    "torreycommerce/acenda-php-sdk": "^0.3.8"
+  },
+  "license": "MIT"
+}
