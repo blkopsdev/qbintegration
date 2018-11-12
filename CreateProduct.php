@@ -2,9 +2,8 @@
     require_once "./vendor/autoload.php";
     include('./AcendaApi.php');
     
-    $client_id = '291cbaae9edbd063adadb67210de4852@acenda.com';
-    $client_secret = '5314959c0dc9c7718ca9e96d0a8f2745';
-    $client_storename = 'brandsdistribution-store';
+    $client_id = '7abf2f33ec710756f81e5fc2e4d85b86@acenda.com';
+    $client_secret = '409f6bd44772902ba34bd449953047e8';
     
     use QuickBooksOnline\API\DataService\DataService;
     use QuickBooksOnline\API\Core\Http\Serialization\XmlObjectSerializer;
