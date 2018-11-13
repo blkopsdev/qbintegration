@@ -23,11 +23,6 @@
     $realmId = $req['acenda']['subscription']['credentials']['company_id'];
     
     $tokenData = refreshToken($realmId);
-    // $tokenData = array(
-    //     'access_token' => 'eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiZGlyIn0..08f5BnsZ92ubocLehCc2Vg.-TXDLB4Yf71FbnNYK8xr7EmznMg7rOQsAmfOR2-8wsePaXj0nYgrzMDaMPwKKy7i_gD5qC2V9u-v6yZKcL3tBGML2HYyP7aqUMdNIWcJCKsJEEvOazPfW2CzpgYI5OcPZvI5k9uss4SMJBqkgxHqraN4RGAXKphSnqQc3Zq8aRKrASYZJE3If6KVsBk0xaMChlL7NT-O1ZUskB5uiajLUrM1sapkPbdJsf7s56DNIBnRTE1AlkFi3_8SucgHH2nAB39twp8MOHT_XfMUMa40jhLPbPu2yQVD4gflXnq4SC9T9rafEwnSwMSu0en5e69JirUFf0O3ng5KiheQX7of5PF-UR5mvJ9fh-Rv0-XiUchYJyeWCDiDB69sB1TkFg5qx8xHhlq-7U2sVesqZKs0MEJWGsNH_e_a0fc1YvHVKFnWHvbfxCGKQHaEumXrJr63Dy17YREjUFfqHkcWORZAlcWIDbOhiOuVuQhu7PB9cZFsy8vsjuHjOyMUOJzAv_7wOS62M1reZSdVpxDmHP6mVUPHkxAxlo1bRllACidX_XMoDq5XRZyPZNR9_XTgTEnqybYFs-e4UfEgaFYF3ofsflUFm6_o5BD_8W-GM2gQUk6mJESVQUp2FfNM5SC-xbosu_Ti6oonkMtsVAdGY9AuCK-ym3PFGm277Si_-jlzBxNy-XIZ5wBy6L80vZGkYcx_.Mx_JVzFI3B-ImDw54iHKcw',
-    //     'refresh_token' => 'Q011550745858apWGu9GUdnlweoH0Dakkw7SEIWfabmYLddUF1'
-    // );
-
 
     if ($tokenData) {
         $dataService = DataService::Configure(array(
@@ -310,11 +305,6 @@
 
         }
 
-        /**
-         * TAX Calculation
-         * @return tax code id and percent
-         */
-        // $taxRate = $dataService->query("SELECT * FROM TaxRate where RateValue='" . );
         $OrderData = [
             "Line" => $OrderItems,
             "CustomerRef" => [
@@ -324,22 +314,20 @@
                 "Address" => $email
             ]
         ];
-        
+        print_r($OrderData) ;
+        // $theResourceObj = Invoice::create($OrderData);
+        // $resultingObj = $dataService->Add($theResourceObj);
 
-        print_r(json_encode($OrderData));
-        $theResourceObj = Invoice::create($OrderData);
-        $resultingObj = $dataService->Add($theResourceObj);
-
-        $error = $dataService->getLastError();
-        if ($error) {
-            echo "The Status code is: " . $error->getHttpStatusCode() . "\n";
-            echo "The Helper message is: " . $error->getOAuthHelperError() . "\n";
-            echo "The Response message is: " . $error->getResponseBody() . "\n";
-        }
-        else {
-            echo "Created Id={$resultingObj->Id}. Reconstructed response body:\n\n";
-            $xmlBody = XmlObjectSerializer::getPostXmlFromArbitraryEntity($resultingObj, $urlResource);
-            echo $xmlBody . "\n";
-        }
+        // $error = $dataService->getLastError();
+        // if ($error) {
+        //     echo "The Status code is: " . $error->getHttpStatusCode() . "\n";
+        //     echo "The Helper message is: " . $error->getOAuthHelperError() . "\n";
+        //     echo "The Response message is: " . $error->getResponseBody() . "\n";
+        // }
+        // else {
+        //     echo "Created Id={$resultingObj->Id}. Reconstructed response body:\n\n";
+        //     $xmlBody = XmlObjectSerializer::getPostXmlFromArbitraryEntity($resultingObj, $urlResource);
+        //     echo $xmlBody . "\n";
+        // }
     }
 ?>
