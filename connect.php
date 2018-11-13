@@ -159,7 +159,7 @@ if (isset($_SESSION['sessionAccessToken'])) {
             <br>
         </div>
         <div style="text-align: center; padding: 50px 0;">
-            <a class="imgLink" href="http://localhost/get_token.php" style="text-align: center;">
+            <a class="imgLink" href="https://adneca.com/quickbooks/get_token.php" style="text-align: center;">
                 <img class="connect-image img-responsive" src="views/C2QB_green_btn_lg_default.png" />
             </a>
         </div>
