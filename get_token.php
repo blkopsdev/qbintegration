@@ -11,15 +11,7 @@
         die("Connect failed: ".mysqli_connect_errno()." : ". mysqli_connect_error());
     }
     
-    $headers = apache_request_headers();
     
-    $referer = $headers['referer'];
-    $needle = "adneca.com/quickbooks/connect.php";
-    if($referer &&  strpos( $referer, $needle ) !== false) {
-        $access_data = processCode();
-    } else {
-        include('./Error.php');
-    }
 
     function processCode() 
     {
@@ -55,17 +47,26 @@
             return $accessTokenJson;
             
         } else {
-            $url = "https://appcenter.intuit.com/connect/oauth2";
-            $params = array(
-                "response_type" => "code",
-                "client_id" => $config['client_id'],
-                "redirect_uri" => $config['oauth_redirect_uri'],
-                'scope' => $config['oauth_scope'],
-                "state" => $config['state']
-            );
-            
-            $request_to = $url . '?' . http_build_query($params);
-            header("Location: " . $request_to);
+            $headers = apache_request_headers();
+
+            $referer = $headers['referer'];
+            $needle = "localhost";
+            if ($referer && strpos($referer, $needle) !== false) {
+                $url = "https://appcenter.intuit.com/connect/oauth2";
+                // $url = "http://appcenter.intuit.com/connect/oauth2";
+                $params = array(
+                    "response_type" => "code",
+                    "client_id" => $config['client_id'],
+                    "redirect_uri" => $config['oauth_redirect_uri'],
+                    'scope' => $config['oauth_scope'],
+                    "state" => $config['state']
+                );
+                
+                $request_to = $url . '?' . http_build_query($params);
+                header("Location: " . $request_to);
+            } else {
+                include('./Error.php');
+            }
         }
     }
 
@@ -78,7 +79,7 @@
         );
     }
 
-
+    $access_data = processCode();
     if ($access_data) {
         $access_token = $access_data['access_token'];
         $refresh_token = $access_data['refresh_token'];

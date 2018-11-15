@@ -10,7 +10,7 @@ session_start();
 $dataService = DataService::Configure(array(
     'auth_mode' => 'oauth2',
     'ClientID' => $config['client_id'],
-    'ClientSecret' =>  $config['client_secret'],
+    'ClientSecret' => $config['client_secret'],
     'RedirectURI' => $config['oauth_redirect_uri'],
     'scope' => $config['oauth_scope'],
     'baseUrl' => "development"
@@ -27,14 +27,15 @@ $_SESSION['authUrl'] = $authUrl;
 if (isset($_SESSION['sessionAccessToken'])) {
 
     $accessToken = $_SESSION['sessionAccessToken'];
-    $accessTokenJson = array('token_type' => 'bearer',
+    $accessTokenJson = array(
+        'token_type' => 'bearer',
         'access_token' => $accessToken->getAccessToken(),
         'refresh_token' => $accessToken->getRefreshToken(),
         'x_refresh_token_expires_in' => $accessToken->getRefreshTokenExpiresAt(),
         'expires_in' => $accessToken->getAccessTokenExpiresAt()
     );
     $dataService->updateOAuth2Token($accessToken);
-    $oauthLoginHelper = $dataService -> getOAuth2LoginHelper();
+    $oauthLoginHelper = $dataService->getOAuth2LoginHelper();
     $CompanyInfo = $dataService->getCompanyInfo();
 }
 
@@ -57,8 +58,21 @@ if (isset($_SESSION['sessionAccessToken'])) {
 
         var OAuthCode = function(url) {
 
-            this.loginPopup = function (parameter) {
-                this.loginPopupUri(parameter);
+            this.loginPopup = function () {
+                // this.loginPopupUri(parameter);
+                var win = window.open(url, 'connectPopup', parameters);
+                var pollOAuth = window.setInterval(function () {
+                    try {
+
+                        if (win.document.URL.indexOf("code") != -1) {
+                            window.clearInterval(pollOAuth);
+                            // win.close();
+                            location.reload();
+                        }
+                    } catch (e) {
+                        console.log(e)
+                    }
+                }, 100);
             }
 
             this.loginPopupUri = function (parameter) {
@@ -111,45 +125,55 @@ if (isset($_SESSION['sessionAccessToken'])) {
         var oauth = new OAuthCode(url);
         var apiCall = new apiCall();
     </script>
+    <style type="text/css">
+        body{
+            height: 100%;
+        }
+        .footer {
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            border-top: #eeeeee 1px solid;
+            padding-top: 20px;
+            padding-bottom: 10px;
+        }
+        .connect-image {
+            width:80%;
+            max-width: 250px;
+            margin: 0 auto;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
+    <div class="header container">
         <h1>
             <a href="http://developer.intuit.com">
                 <img src="views/quickbooks_logo_horz.png" id="headerLogo">
             </a>
-
         </h1>
         <hr>
+    </div>
+
+    <div class="main container">
         <div class="well text-center">
-            <h1>Intuit OAuth2.0 & OpenID Connect in PHP</h1>
+            <h1>Connect To QuickBooks Online</h1>
             <br>
         </div>
-        <h2>OAuth2.0</h2>
-        <!-- <h4>( Please refer to the <a target="_balnk" href="https://developer.intuit.com/docs/00_quickbooks_online/2_build/10_authentication_and_authorization/10_oauth_2.0">OAuth2.0 Documentation</a> )</h4> -->
-        <p>If there is no access token or the access token is invalid, click the <b>Connect to QuickBooks</b> button below.</p>
-        <pre id="accessToken" style="background-color:#efefef;overflow-x:scroll"><?php echo json_encode($accessTokenJson, JSON_PRETTY_PRINT); ?>
-        </pre>
-        <a class="imgLink" href="#" onclick="oauth.loginPopup()"><img src="views/C2QB_green_btn_lg_default.png" width="178" /></a>
-        <button  type="button" class="btn btn-success" onclick="apiCall.refreshToken()">Refresh Token</button>
-        <hr />
-        <h2>Make an API call</h2><h4>( Please refer to our <a target="_balnk" href="https://developer.intuit.com/v2/apiexplorer?apiname=V3QBO#?id=Account">API Explorer</a> )</h4>
-        <p>If there is no access token or the access token is invalid, click either the <b>Connect to QucikBooks</b> or <b>Sign with Intuit</b> button above.</p>
-        <pre id="apiCall"></pre>
-        <button  type="button" class="btn btn-success" onclick="apiCall.getCompanyInfo()">Get Company Info</button>
-        <hr />
-        <p>More info:</p>
-        <ul>
-            <li><a href="https://developer.intuit.com/docs">Intuit API Developer Guide</a></li>
-            <li><a href="https://developer.intuit.com/docs/00_quickbooks_online/2_build/50_sample_apps_and_code">Intuit Sample Apps and Code</a></li>
-            <li><a href="https://developer.intuit.com/docs/00_quickbooks_online/2_build/40_sdks">Intuit Official SDK's</a></li>
-            <li><a href="https://github.com/anilkumarbp/intuit-demos-webhooks">Github Repo</a></li>
-            <li><a href="https://github.com/anilkumarbp/intuit-demos-webhooks/issues">Report Issues</a></li>
-        </ul>
-        <hr>
-        <p class="text-center text-muted">
-            &copy; 2018 Intuit&trade;, Inc. All rights reserved. Intuit and QuickBooks are registered trademarks of Intuit Inc.
-        </p>
+        <div style="text-align: center; padding: 50px 0;">
+            <a class="imgLink" href="https://adneca.com/quickbooks/get_token.php" style="text-align: center;">
+                <img class="connect-image img-responsive" src="views/C2QB_green_btn_lg_default.png" />
+            </a>
+        </div>
+        <!-- <button  type="button" class="btn btn-success" onclick="apiCall.refreshToken()">Refresh Token</button> -->
+        
+        <!-- <button  type="button" class="btn btn-success" onclick="apiCall.getCompanyInfo()">Get Company Info</button> -->
+    </div>
+    <div class="footer ">
+        <div class="container">
+            <p class="text-left text-muted">
+                &copy; 2018 Intuit&trade;, Inc. All rights reserved. Intuit and QuickBooks are registered trademarks of Intuit Inc.
+            </p>
+        </div>
     </div>
 </body>
 </html>
